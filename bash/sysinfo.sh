@@ -1,17 +1,30 @@
 #!/bin/bash
 
 #Heading and command for system’s fully-qualified domain name
-echo 'FQDN:'
-hostname -f
+FQDN=$(hostname -f)
 
 #Heading and command for The operating system name and version
-echo 'Host Information:'
-hostnamectl
+Host_Information=$(hostnamectl | awk 'FNR == 7 {print $3, $4, $5}')
 
 #Heading and command for the  IP addresses
-echo 'IP address:'
-hostname -I
+IP_Address=$(hostname -I)
 
 #Heading and command for amount of space available
-echo 'Space Available:'
-df / -h
+Space_Available=$(df / -h | awk 'FNR == 2 {print $4}')
+
+cat <<EOF
+
+My Report
+
+============
+FQDN=$FQDN
+Operating system name and version=$Host_Information
+IP Address=$IP_Address
+Root filesystem space line and Space Available=$Space_Available
+============
+
+EOF
+
+
+
+
