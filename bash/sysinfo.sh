@@ -37,45 +37,70 @@ verbose=false
 systemReport=false
 diskReport=false
 networkReport=false
-fullReport=false
+fullReport=true
 
-function save_error_log() {
-    local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
-    local error_message="$1"
-    echo "[$timestamp] $error_message" >> /var/log/systeminfo.log
-    if [["$verbose"=true]]; then 
-    echo "Error has occured at [$timestamp] for invalid option: $error_message ; Refer to help section (sysinfo.sh -h)"
-    fi
-    
-}
+while [ $# -gt 0 ]; do
+	case ${1} in
+		-h | --help)
+		displayhelp
+		exit 0
+		;;
+		-v | --verbose)
+		verbose=true
+		;;
+		-s | --system)
+		systemReport=true
+		;;
+		-d | --disk)
+		diskReport=true
+		;;
+		-n | --network)
+		networkReport=true
+		;;
+		*)
+		echo "invalid option
+		Usage: sysinfo.sh[Options]
+		try 'sysinfo.sh --help' for information"
+		errormessage "@"
+		exit 1
+		;;
+	esac
+	shift
+done
+if [[ "$verbose" == true ]]; then
+	fullReport=false
+	errormessage
+fi
 
-#This function displays help information if the user asks for it on the command line or gives us a bad command line
-function displayhelp {
-cat <<EOF 
-  Usage: sysconfig [OPTION]...
-  [OPTIONS]       [DESCRIPTION]
-  --help:         Displays Help Information\n
-  --disk:         Displays Disk Information\n
-  --network:      Runs only the network report\n
-  --system:       runs only the computerreport, osreport, cpureport, ramreport, and videoreport
-  --verbose:      runs your script verbosely, showing any errors to the user instead of sending them to the logfile
-EOF
-}
+if [[ "$systemReport" == true ]]; then 
+	fullReport=false
+	cpureport
+	ramreport
+	videoreport
+	computerreport
+	osreport
+fi
+	
+if [[ "$diskReport" == true ]]; then
+	fullReport=false
+	diskreport
+fi
+
+if [[ "$networkReport" == true ]]; then
+	fullReport=false
+	networkreport
+	
+fi
+if [[ "$fullReport" == true ]]; then
+	fullReport=false
+	diskreport
+	cpureport
+	ramreport
+	videoreport
+	computerreport
+	osreport
+	networkreport
+fi	
 
 
-cat <<EOF
 
-----------------------------Report Content------------------------------
-
-FQDN= $FQDN
-Operating system name and version= $Host_Information
-IP Address= $IP_Address
-Root filesystem space line and Space Available= $Space_Available
-EOF
-cpuReport
-networkReport
-storageReport
-ramReport
-videoReport
-cmpReport
-osReport
