@@ -1,3 +1,5 @@
+#Define the variables for lsblk, dmidecode, lshw, lscpu
+
 lsblkOutput=$(lsblk)
 dmidecodeOutput=$(dmidecode)
 lshwOutput=$(lshw)
@@ -5,11 +7,11 @@ lscpuOutput=$(lscpu)
 
 
 ############################################# CPU INFORMATION ##################################################
-function cpuReport {
+function cpureport()  {
 
 	#Cmd to get the cpu manufacturer.
 	cpumanufac=$(echo "$lshwOutput" | grep 'Model name:' | sed 's/,"Model name: *//') 
-	if [ -z "$cmpdescription" ]; then 
+	if [ -z "$cpumanufac" ]; then 
 		cpumanufac='Error! Data is unavailable.'
 	else
 		cpumanufac=$(echo "$lscpuOutput" | grep 'Model name:' | sed 's/,"Model name: *//')
@@ -17,7 +19,7 @@ function cpuReport {
 	#-----------------------------------------------------------------------------------------------
 	#Cmd to get the Cpu architecture.
 	cpuarchi=$(echo "$lscpuOutput" | grep 'Architecture: ' | awk '{print$2}')
-	if [ -z "$cmpdescription" ]; then 
+	if [ -z "$cpuarchi" ]; then 
 		cpuarchi='Error! Data is unavailable.'
 	else
 		cpuarchi=$(echo "$lscpuOutput" | grep 'Architecture: ' | awk '{print$2}')
@@ -25,7 +27,7 @@ function cpuReport {
 	#-----------------------------------------------------------------------------------------------
 	#Cmd to get the Cpu core count.
 	cpucore=$(echo "$lscpuOutput" | grep 'CPU(s): ' | head -1 | awk '{print$2}')
-	if [ -z "$cmpdescription" ]; then 
+	if [ -z "$cpucore" ]; then 
 		cpucore='Error! Data is unavailable.'
 	else
 		cpucore=$(echo "$lscpuOutput" | grep 'CPU(s): ' | head -1 | awk '{print$2}')
@@ -33,7 +35,7 @@ function cpuReport {
 	#-----------------------------------------------------------------------------------------------
 	#Cmd to get the Cpu maximum speed.
 	cpuspeed=$(echo "$lshwOutput" -class cpu | grep 'capacity: ' | head -1 | awk '{print$2}')
-	if [ -z "$cmpdescription" ]; then 
+	if [ -z "$cpuspeed" ]; then 
 		cpuspeed='Error! Data is unavailable.'
 	else
 		cpuspeed=$(echo "$lshwOutput" -class cpu | grep 'capacity: ' | head -1 | awk '{print$2}')
@@ -41,7 +43,7 @@ function cpuReport {
 	#-----------------------------------------------------------------------------------------------
 	#Cmd to get the size of L1d.
 	sizeL1d=$(echo "$lscpuOutput" | grep 'L1d ' | awk '{print $3}')
-	if [ -z "$cmpdescription" ]; then 
+	if [ -z "$sizeL1d" ]; then 
 		sizeL1d='Error! Data is unavailable.'
 	else
 		sizeL1d=$(echo "$lscpuOutput" | grep 'L1d ' | awk '{print $3}')
@@ -49,7 +51,7 @@ function cpuReport {
 	#-----------------------------------------------------------------------------------------------
 	#Cmd to get the size of L1i.
 	sizeL1i=$(echo "$lscpuOutput" | grep 'L1i ' | awk '{print $3}')
-	if [ -z "$cmpdescription" ]; then 
+	if [ -z "$sizeL1i" ]; then 
 		sizeL1i='Error! Data is unavailable.'
 	else
 		sizeL1i=$(echo "$lscpuOutput" | grep 'L1i ' | awk '{print $3}')
@@ -57,7 +59,7 @@ function cpuReport {
 	#-----------------------------------------------------------------------------------------------
 	#Cmd to get the size of L2.
 	sizeL2=$(echo "$lscpuOutput" | grep 'L2' | awk '{print $3}')
-	if [ -z "$cmpdescription" ]; then 
+	if [ -z "$sizeL2" ]; then 
 		sizeL2='Error! Data is unavailable.'
 	else
 		sizeL2=$(echo "$lscpuOutput" | grep 'L2 ' | awk '{print $3}')
@@ -65,12 +67,13 @@ function cpuReport {
 	#-----------------------------------------------------------------------------------------------
 	#Cmd to get the size of L3.
 	sizeL3=$(echo "$lscpuOutput" | grep 'L3' | awk '{print $3}')
-	if [ -z "$cmpdescription" ]; then 
+	if [ -z "$sizeL3" ]; then 
 		sizeL3='Error! Data is unavailable.'
 	else
 		sizeL3=$(echo "$lscpuOutput" | grep 'L3 ' | awk '{print $3}')
 	fi
-	
+
+#Commands to print the CPU information.	
 cat <<EOF
 	
 ------ CPU INFORMATION------
@@ -86,35 +89,38 @@ EOF
 }
 
 ################################################## Network Report ##################################################
-function networkReport() {
+
+#Create a function for network report
+function networkreport() {
+	#Display Interface model or description
 	interfaceDescription=$(lshw -C network | grep -i 'description:' | awk '{print $1, $2, $3}')
 	if [ -z "$interfaceDescription" ]; then 
 		interfaceDescription='Error! Data is unavailable.'
 	else
 		interfaceDescription=$(lshw -C network | grep -i 'description:' | awk '{print $1, $2, $3}')
 	fi
-
+#Display Interface manufacturer
 	interfaceManu=$(lshw -C network | grep -i 'vendor:' | awk '{print $2, $3}')
 	if [ -z "$interfaceManu" ]; then 
 		interfaceManu='Error! Data is unavailable.'
 	else
 		interfaceManu=$(lshw -C network | grep -i 'vendor:' | awk '{print $2, $3}')
 	fi
-
+#Display Interface speed
 	interSpeed=$(ethtool ens33 | grep 'Speed:' | awk '{print $2}')
 	if [ -z "$interSpeed" ]; then 
 		interSpeed='Error! Data is unavailable.'
 	else
 		interSpeed=$(ethtool ens33 | grep 'Speed:' | awk '{print $2}')
 	fi
-
+#Display interface Ip Address
 	interIpAdd=$(ip -4 addr show | awk '/inet /{print $2}')
 	if [ -z "$interIpAdd" ]; then 
 		interIpAdd='Error! Data is unavailable.'
 	else
 		interIpAdd=$(ip -4 addr show | awk '/inet /{print $2}')
 	fi
-
+#Display interface bridge master 
 	interBridgeMaster=$(sudo brctl show | awk 'NR > 1 {print $1, $4}')
 	if [ -z "$interBridgeMaster" ]; then 
 		interBridgeMaster='N/A'
@@ -122,6 +128,7 @@ function networkReport() {
 		interBridgeMaster=$(sudo brctl show | awk 'NR > 1 {print $1, $4}')
 	fi
 
+#Display DNS server
 	DNSserver=$(cat /etc/resolv.conf | grep "nameserver" | awk '{print $2}')
 	if [ -z "$DNSserver" ]; then 
 		DNSserver='N/A'
@@ -129,13 +136,14 @@ function networkReport() {
 		DNSserver=$(cat /etc/resolv.conf | grep "nameserver" | awk '{print $2}')
 	fi
 
+#Display search domain
 	searchDomain=$(cat /etc/resolv.conf | grep "search" | awk 'NR == 2 {print $2}')
 	if [ -z "$searchDomain" ]; then 
 		searchDomain='Error! Data is unavailable.'
 	else
 		searchDomain=$(cat /etc/resolv.conf | grep "search" | awk 'NR == 2 {print $2}')
 	fi
-
+#Display table of the installed installed network interfaces (including virtual devices) with each table row
 	interfaceTable=$(paste -d ';' <(echo "$interfaceDescription") <(echo "$interfaceManu") <(echo "$interSpeed") <(echo "$interIpAdd") <(echo "$interBridgeMaster") <(echo "$DNSserver") <(echo "$searchDomain") | column -N 'Interface description',Manufacturer,'Interface Speed','Ip Address','Bridge Master','DNS Server','Search Domain' -s ';' -o ' | ' -t)
  	
 cat <<-EOF
@@ -149,7 +157,7 @@ EOF
 
 ########################################################## Storage Information ##############################################################
 
-function storageReport() {
+function diskreport() {
 	driveManufacturer0=$(echo "$lshwOutput" | grep -A10 '\*\-disk' | grep 'vendor:' | awk '{$1=""; print $0}')
 	if [ -z "$driveManufacturer0" ]; then 
 		driveManufacturer0='Error! Data is unavailable.'
@@ -311,7 +319,7 @@ EOF
 	
 ####################### RAM INFORMATION ##############################
 
-function ramReport() {
+function ramreport() {
 	ramManufacturer=$(echo "$dmidecodeOutput" | grep -m1 -i "manufacturer" | awk '{$1=""; print $0}')
 	if [ -z "$ramManufacturer" ]; then 
 		ramManufacturer='Error! Data is unavailable.'
@@ -374,7 +382,7 @@ EOF
 
 ####################### Video Report ##############################
 
-function videoReport() {
+function videoreport() {
 	videoManu=$(lshw -class display | grep "vendor:" | awk '{print $2}')
 	if [ -z "$videoManu" ]; then 
 		videoManu='Error! Data is unavailable.'
@@ -403,7 +411,7 @@ EOF
 ############################################## COMPUTER INFORMATION ################################################
 
 
-function cmpReport() {
+function computerreport() {
 	#Cmd to get the computer manufacturer.
 	cmpmanuftr=$(echo "$lshwOutput" -class system | grep 'vendor:' | head -1 | awk '{$1=""; print $0}') 
 	if [ -z "$cmpmanuftr" ]; then
@@ -442,7 +450,7 @@ EOF
 
 ####################################### OS INFORMATION ################################################
 
-function osReport() {
+function osreport() {
 	#Cmd to get Os distro version.
 	distroversion=$(hostnamectl | grep 'Kernel: ' | awk '{$1=""; print $0}')
 	if [ -z "$cmpdescription" ]; then 
@@ -462,4 +470,28 @@ Linux distro=                  $Host_Information
 Distro version=               $distroversion
 EOF
 	
+}
+
+#This function displays help information if the user asks for it on the command line or gives us a bad command line
+function displayhelp {
+cat <<EOF 
+  Usage: sysconfig [OPTION]...
+  [OPTIONS]       [DESCRIPTION]
+  --help:         Displays Help Information\n
+  --disk:         Displays Disk Information\n
+  --network:      Runs only the network report\n
+  --system:       runs only the computerreport, osreport, cpureport, ramreport, and videoreport
+  --verbose:      runs your script verbosely, showing any errors to the user instead of sending them to the logfile
+EOF
+}
+
+#
+function errormessage() {
+    local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+    local error_message="$1"
+    echo "[$timestamp] $error_message" >> /var/log/systeminfo.log
+    if [[ "$verbose" == true ]]; then 
+    echo "Error has occured at [$timestamp] for invalid option: $error_message ; Refer to help section (sysinfo.sh -h)"
+    fi
+    
 }
