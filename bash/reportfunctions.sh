@@ -145,7 +145,7 @@ function networkreport() {
 	fi
 #Display table of the installed installed network interfaces (including virtual devices) with each table row
 	interfaceTable=$(paste -d ';' <(echo "$interfaceDescription") <(echo "$interfaceManu") <(echo "$interSpeed") <(echo "$interIpAdd") <(echo "$interBridgeMaster") <(echo "$DNSserver") <(echo "$searchDomain") | column -N 'Interface description',Manufacturer,'Interface Speed','Ip Address','Bridge Master','DNS Server','Search Domain' -s ';' -o ' | ' -t)
- 	
+ #Display network information	
 cat <<-EOF
 
 ========================================================================================================
@@ -156,8 +156,9 @@ EOF
 }
 
 ########################################################## Storage Information ##############################################################
-
+#Create a function to print the disk report.
 function diskreport() {
+#Display drive Manufacturer
 	driveManufacturer0=$(echo "$lshwOutput" | grep -A10 '\*\-disk' | grep 'vendor:' | awk '{$1=""; print $0}')
 	if [ -z "$driveManufacturer0" ]; then 
 		driveManufacturer0='Error! Data is unavailable.'
@@ -165,13 +166,14 @@ function diskreport() {
 		driveManufacturer0=$(echo "$lshwOutput" | grep -A10 '\*\-disk' | grep 'vendor:' | awk '{$1=""; print $0}')
 	fi
 
+#Display drive vendor 1
 	drivevendor1=$(echo "$lshwOutput" | grep -m1 -A8 "\-volume:0" | grep 'vendor:' | awk '{$1=""; print $0}')
 	if [ -z "$drivevendor1" ]; then 
 		drivevendor1='Error! Data is unavailable.'
 	else
 		drivevendor1=$(echo "$lshwOutput" | grep -m1 -A8 "\-volume:0" | grep 'vendor:' | awk '{$1=""; print $0}')
 	fi
-
+#Display drive vendor 2
 	drivevendor2=$(echo "$lshwOutput" | grep -m1 -A8 "\-volume:1" | grep 'vendor:' | awk '{$1=""; print $0}')
 	if [ -z "$drivevendor1" ]; then 
 		drivevendor2='Error! Data is unavailable.'
@@ -179,6 +181,7 @@ function diskreport() {
 		drivevendor2=$(echo "$lshwOutput" | grep -m1 -A8 "\-volume:1" | grep 'vendor:' | awk '{$1=""; print $0}')
 	fi
 
+#Display drive vendor 3
 	drivevendor3=$(echo "$lshwOutput" | grep -m1 -A8 "\-volume:2" | grep 'vendor:' | awk '{$1=""; print $0}')
 	if [ -z "$drivevendor3" ]; then 
 		drivevendor3='Error! Data is unavailable.'
@@ -186,6 +189,7 @@ function diskreport() {
 		drivevendor3=$(echo "$lshwOutput" | grep -m1 -A8 "\-volume:2" | grep 'vendor:' | awk '{$1=""; print $0}')
 	fi
 
+#Display drive model
 	driveModel=$(echo "$lshwOutput" | grep -m1 -A10 "\-disk" | grep 'product:' | awk '{$1=""; print $0}')
 	if [ -z "$driveModel" ]; then 
 		driveModel='Error! Data is unavailable.'
@@ -193,13 +197,14 @@ function diskreport() {
 		driveModel=$(echo "$lshwOutput" | grep -m1 -A10 "\-disk" | grep 'product:' | awk '{$1=""; print $0}')
 	fi
 
+#Display drive size.
 	driveSize0=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==1 {print $4"B"}')
 	if [ -z "$driveSize0" ]; then 
 		driveSize0='Error! Data is unavailable.'
 	else
 		driveSize0=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==1 {print $4"B"}')
 	fi
-
+#Display drive size 1.
 	driveSize1=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==2 {print $4"B"}')
 	if [ -z "$driveSize1" ]; then 
 		driveSize1='Error! Data is unavailable.'
@@ -207,6 +212,7 @@ function diskreport() {
 		driveSize1=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==2 {print $4"B"}')
 	fi
 
+#Display drive size 2
 	driveSize2=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==3 {print $4"B"}')
 	if [ -z "$driveSize2" ]; then 
 		driveSize2='Error! Data is unavailable.'
@@ -214,6 +220,7 @@ function diskreport() {
 		driveSize2=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==3 {print $4"B"}')
 	fi
 
+#Display drive size 3
 	driveSize3=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==4 {print $4"B"}')
 	if [ -z "$driveSize3" ]; then 
 		driveSize3='Error! Data is unavailable.'
@@ -221,20 +228,21 @@ function diskreport() {
 		driveSize3=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==4 {print $4"B"}')
 	fi
 
+#Display drive partition 0
 	drivePartition0=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==1 {print $1}')
 	if [ -z "$drivePartition0" ]; then 
 		drivePartition0='Error! Data is unavailable.'
 	else
 		drivePartition0=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==1 {print $1}')
 	fi
-
+#Display drive partition 1
 	drivePartition1=$(echo "$lsblkOutput" | grep "sda1" | awk 'FNR==1 {print $1}' | tail -c 5)
 	if [ -z "$drivePartition1" ]; then 
 		drivePartition1='Error! Data is unavailable.'
 	else
 		drivePartition1=$(echo "$lsblkOutput" | grep "sda1" | awk 'FNR==1 {print $1}' | tail -c 5)
 	fi
-
+#Display drive partition 2
 	drivePartition2=$(echo "$lsblkOutput" | grep "sda2" | awk 'FNR==1 {print $1}' | tail -c 5)
 	if [ -z "$drivePartition2" ]; then 
 		drivePartition2='Error! Data is unavailable.'
@@ -242,6 +250,7 @@ function diskreport() {
 		drivePartition2=$(echo "$lsblkOutput" | grep "sda2" | awk 'FNR==1 {print $1}' | tail -c 5)
 	fi
 
+#Display drive partition 3
 	drivePartition3=$(echo "$lsblkOutput" | grep "sda3" | awk 'FNR==1 {print $1}' | tail -c 5)
 	if [ -z "$drivePartition3" ]; then 
 		drivePartition3='Error! Data is unavailable.'
@@ -249,6 +258,7 @@ function diskreport() {
 	drivePartition3=$(echo "$lsblkOutput" | grep "sda3" | awk 'FNR==1 {print $1}' | tail -c 5)
 	fi
 
+#Display drive mount point 0.
 	driveMountPoint0=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==1 {print $7}')
 	if [ -z "$driveMountPoint0" ]; then 
 		driveMountPoint0='Error! Data is unavailable.'
@@ -256,6 +266,7 @@ function diskreport() {
 		driveMountPoint0=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==1 {print $7}')
 	fi
 
+#Display drive mount point 1.
 	driveMountPoint1=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==2 {print $7}')
 	if [ -z "$driveMountPoint1" ]; then 
 		driveMountPoint1='Error! Data is unavailable.'
@@ -263,6 +274,7 @@ function diskreport() {
 		driveMountPoint1=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==2 {print $7}')
 	fi
 
+#Display drive mount point 2.
 	driveMountPoint2=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==3 {print $7}')
 	if [ -z "$driveMountPoint2" ]; then 
 		driveMountPoint2='Error! Data is unavailable.'
@@ -270,13 +282,14 @@ function diskreport() {
 		driveMountPoint2=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==3 {print $7}')
 	fi
 
+#Display drive mount point 3.
 	driveMountPoint3=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==4 {print $7}')
 	if [ -z "$driveMountPoint3" ]; then 
 		driveMountPoint3='Error! Data is unavailable.'
 	else
 		driveMountPoint3=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==4 {print $7}')
 	fi
-
+#Display drive File system SizeSDA2
 	driveFilesystemSizeSDA2=$(echo "$lsblkOutput" | grep "sda2" | awk '{print $2"B"}')
 	if [ -z "$driveFilesystemSizeSDA2" ]; then 
 		driveFilesystemSizeSDA2='Error! Data is unavailable.'
@@ -284,6 +297,7 @@ function diskreport() {
 		driveFilesystemSizeSDA2=$(echo "$lsblkOutput" | grep "sda2" | awk '{print $2"B"}')
 	fi
 
+#Display drive File system SizeSDA3
 	driveFilesystemSizeSDA3=$(echo "$lsblkOutput" | grep "sda3" | awk '{print $2"B"}')
 	if [ -z "$driveFilesystemSizeSDA3" ]; then 
 		driveFilesystemSizeSDA3='Error! Data is unavailable.'
@@ -291,6 +305,7 @@ function diskreport() {
 		driveFilesystemSizeSDA3=$(echo "$lsblkOutput" | grep "sda3" | awk '{print $2"B"}')
 	fi
 
+#Display drive File system free SDA2
 	driveFilesystemFreeSDA2=$(echo "$lsblkOutput" | grep "sda2" | awk '{print $4"B"}')
 	if [ -z "$driveFilesystemFreeSDA2" ]; then 
 		driveFilesystemFreeSDA2='Error! Data is unavailable.'
@@ -298,6 +313,7 @@ function diskreport() {
 		driveFilesystemFreeSDA2=$(echo "$lsblkOutput" | grep "sda2" | awk '{print $4"B"}')
 	fi
 
+#Display drive File system free SDA3
 	driveFilesystemFreeSDA3=$(echo "$lsblkOutput" | grep "sda3" | awk '{print $4"B"}')
 	if [ -z "$driveFilesystemFreeSDA3" ]; then 
 		driveFilesystemFreeSDA3='Error! Data is unavailable.'
@@ -305,9 +321,10 @@ function diskreport() {
 		driveFilesystemFreeSDA3=$(echo "$lsblkOutput" | grep "sda3" | awk '{print $4"B"}')
 	fi
 
-
+#Command to display the disk information in the table form.
 	diskTable=$(paste -d ';' <(echo "$drivePartition0" ; echo "$drivePartition1" ; echo "$drivePartition2" ; echo "$drivePartition3") <(echo "$driveManufacturer0" ; echo "$drivevendor1" ; echo "$drivevendor2" ; echo "$drivevendor3") <(echo "$driveModel" ; echo "N/A" ; echo "N/A" ; echo "N/A") <(echo "$driveSize0" ; echo "$driveSize1" ; echo "$driveSize2" ; echo "$driveSize3") <(echo "N/A" ; echo "N/A" ; echo "$driveFilesystemSizeSDA2" ; echo "$driveFilesystemSizeSDA3") <(echo "N/A" ; echo "N/A" ; echo "$driveFilesystemFreeSDA2" ; echo "$driveFilesystemFreeSDA3") <(echo "$driveMountPoint0" ; echo "$driveMountPoint1" ; echo "$driveMountPoint2" ; echo "$driveMountPoint3") | column -N 'Partition Name (/dev/sda)',Vendor,Model,Size,'Filesystem Size','Filesystem Free Space','Mount Point' -s ';' -o ' | ' -t) 
-	
+
+#Command to print the disk information	
 cat <<EOF
 
 ========================================================================================================
@@ -319,7 +336,9 @@ EOF
 	
 ####################### RAM INFORMATION ##############################
 
+#Create a function to get the components of RAM
 function ramreport() {
+#Cmd to get Ram Manufacturer
 	ramManufacturer=$(echo "$dmidecodeOutput" | grep -m1 -i "manufacturer" | awk '{$1=""; print $0}')
 	if [ -z "$ramManufacturer" ]; then 
 		ramManufacturer='Error! Data is unavailable.'
@@ -327,6 +346,7 @@ function ramreport() {
 		ramManufacturer=$(echo "$dmidecodeOutput" | grep -m1 -i "manufacturer" | awk '{$1=""; print $0}')
 	fi
 
+#Cmd to get Ram name
 	ramProductName=$(echo "$dmidecodeOutput" | grep -m1 -i "Product name" | awk '{$1=""; $2=""; print $0}')
 	if [ -z "$ramProductName" ]; then 
 		ramProductName='Error! Data is unavailable.'
@@ -334,6 +354,7 @@ function ramreport() {
 		ramProductName=$(echo "$dmidecodeOutput" | grep -m1 -i "Product name" | awk '{$1=""; $2=""; print $0}')
 	fi
 
+#Cmd to get Ram serial number
 	ramSerialNum=$(echo "$dmidecodeOutput" | grep -m1 -i "serial number" | awk '{$1=""; print $0}')
 	if [ -z "$ramSerialNum" ]; then 
 		ramSerialNum='Error! Data is unavailable.'
@@ -341,6 +362,7 @@ function ramreport() {
 		ramSerialNum=$(echo "$dmidecodeOutput" | grep -m1 -i "serial number" | awk '{$1=""; print $0}')
 	fi
 
+#Cmd to get Ram Size
 	ramSize=$(echo "$lshwOutput" | grep -A10 "\-memory" | grep 'size:' | awk 'FNR == 2 {$1=""; print $0}')
 	if [ -z "$ramSize" ]; then 
 		ramSize='Error! Data is unavailable.'
@@ -348,6 +370,7 @@ function ramreport() {
 		ramSize=$(echo "$lshwOutput" | grep -A10 "\-memory" | grep 'size:' | awk 'FNR == 2 {$1=""; print $0}')
 	fi
 
+#Cmd to get Ram Speed
 	ramSpeed=$(echo "$dmidecodeOutput" --type 17 | grep -m1 Speed | awk '{$1=""; print $0}')
 	if [ -z "$ramSpeed" ]; then 
 		ramSpeed='Error! Data is unavailable.'
@@ -355,6 +378,7 @@ function ramreport() {
 		ramSpeed=$(echo "$dmidecodeOutput" --type 17 | grep -m1 Speed | awk '{$1=""; print $0}')
 	fi
 
+#Cmd to get Ram Location
 	ramLocation=$(echo "$lshwOutput" | grep -m1 'slot: RAM' |awk '{$1=""; $2=""; print $0}')
 	if [ -z "$ramLocation" ]; then 
 		ramLocation='Error! Data is unavailable.'
@@ -362,15 +386,17 @@ function ramreport() {
 		ramLocation=$(echo "$lshwOutput" | grep -m1 'slot: RAM' |awk '{$1=""; $2=""; print $0}')
 	fi
 
+#Cmd to get Ram total size.
 	totalSize=$(echo "$lshwOutput" | grep -A5 "\-memory" | grep -m1 'size:' | awk '{$1=""; print $0}')
 	if [ -z "$totalSize" ]; then 
 		totalSize='Error! Data is unavailable.'
 	else
 		totalSize=$(echo "$lshwOutput" | grep -A5 "\-memory" | grep -m1 'size:' | awk '{$1=""; print $0}')
 	fi
-
+#Command to display the RAM information in the table form.
 	ramTable=$(paste -d ';' <(echo "$ramManufacturer") <(echo "$ramProductName") <(echo "$ramSerialNum") <(echo "$ramSize") <(echo "$ramSpeed") <(echo "$ramLocation") <(echo "$totalSize") | column -N Manufacturer,Model,'Seial Number',Size,Speed,Location,'Total size' -s ';' -o ' | ' -t)	
 
+#display the table
 cat <<EOF
 
 ========================================================================================================
@@ -381,8 +407,10 @@ EOF
 
 
 ####################### Video Report ##############################
-
+#Create a video report function.
 function videoreport() {
+
+#Cmd to get Video manufacturer.
 	videoManu=$(lshw -class display | grep "vendor:" | awk '{print $2}')
 	if [ -z "$videoManu" ]; then 
 		videoManu='Error! Data is unavailable.'
@@ -390,13 +418,15 @@ function videoreport() {
 		videoManu=$(lshw -class display | grep "vendor:" | awk '{print $2}')
 	fi
 
+#Cmd to get Video description.
 	videoDescription=$(lshw -C display | grep 'description:' | awk '{$1=""; print $0}')
 	if [ -z "$videoDescription" ]; then 
 		videoDescription='Error! Data is unavailable.'
 	else
 		videoDescription=$(lshw -C display | grep 'description:' | awk '{$1=""; print $0}')
 	fi
-	
+
+#Display the imnformation got by the videoreport function.	
 cat <<EOF
 
 ========================================================================================================
@@ -410,7 +440,7 @@ EOF
 	
 ############################################## COMPUTER INFORMATION ################################################
 
-
+#Create a function for Computer information.
 function computerreport() {
 	#Cmd to get the computer manufacturer.
 	cmpmanuftr=$(echo "$lshwOutput" -class system | grep 'vendor:' | head -1 | awk '{$1=""; print $0}') 
@@ -435,7 +465,7 @@ function computerreport() {
 	else
 		cmpserial=$(echo "$lshwOutput" -class system | grep -m1 -i 'serial: ' | awk '{$1=""; print $0}')
 	fi
-
+#Display the system information.
 cat <<EOF
 
 ========================================================================================================
@@ -461,6 +491,8 @@ function osreport() {
 
 	#Heading and command for The operating system name and version
 	Host_Information=$(hostnamectl | awk 'FNR == 7 {print $3, $4, $5}')
+	
+#Display the OS information.
 cat <<EOF
 
 ========================================================================================================
@@ -485,7 +517,7 @@ cat <<EOF
 EOF
 }
 
-#
+#Create a function for the error message which saves the error message with a timestamp into a logfile named /var/log/systeminfo.log.
 function errormessage() {
     local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
     local error_message="$1"
