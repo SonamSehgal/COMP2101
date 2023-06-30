@@ -130,45 +130,225 @@ fi
 ####################### RAM INFORMATION ##############################
 
 ramManufacturer=$(echo "$dmidecodeOutput" | grep -m1 -i "manufacturer" | awk '{$1=""; print $0}')
+if [ -z "$ramManufacturer" ]; then 
+	ramManufacturer='Error! Data is unavailable.'
+else
+	ramManufacturer=$(echo "$dmidecodeOutput" | grep -m1 -i "manufacturer" | awk '{$1=""; print $0}')
+fi
+
 ramProductName=$(echo "$dmidecodeOutput" | grep -m1 -i "Product name" | awk '{$1=""; $2=""; print $0}')
+if [ -z "$ramProductName" ]; then 
+	ramProductName='Error! Data is unavailable.'
+else
+	ramProductName=$(echo "$dmidecodeOutput" | grep -m1 -i "Product name" | awk '{$1=""; $2=""; print $0}')
+fi
+
 ramSerialNum=$(echo "$dmidecodeOutput" | grep -m1 -i "serial number" | awk '{$1=""; print $0}')
+if [ -z "$ramSerialNum" ]; then 
+	ramSerialNum='Error! Data is unavailable.'
+else
+	ramSerialNum=$(echo "$dmidecodeOutput" | grep -m1 -i "serial number" | awk '{$1=""; print $0}')
+fi
+
 ramSize=$(echo "$lshwOutput" | grep -A10 "\-memory" | grep 'size:' | awk 'FNR == 2 {$1=""; print $0}')
+if [ -z "$ramSize" ]; then 
+	ramSize='Error! Data is unavailable.'
+else
+	ramSize=$(echo "$lshwOutput" | grep -A10 "\-memory" | grep 'size:' | awk 'FNR == 2 {$1=""; print $0}')
+fi
+
 ramSpeed=$(echo "$dmidecodeOutput" --type 17 | grep -m1 Speed | awk '{$1=""; print $0}')
+if [ -z "$ramSpeed" ]; then 
+	ramSpeed='Error! Data is unavailable.'
+else
+	ramSpeed=$(echo "$dmidecodeOutput" --type 17 | grep -m1 Speed | awk '{$1=""; print $0}')
+fi
+
 ramLocation=$(echo "$lshwOutput" | grep -m1 'slot: RAM' |awk '{$1=""; $2=""; print $0}')
+if [ -z "$ramLocation" ]; then 
+	ramLocation='Error! Data is unavailable.'
+else
+	ramLocation=$(echo "$lshwOutput" | grep -m1 'slot: RAM' |awk '{$1=""; $2=""; print $0}')
+fi
+
 totalSize=$(echo "$lshwOutput" | grep -A5 "\-memory" | grep -m1 'size:' | awk '{$1=""; print $0}')
+if [ -z "$totalSize" ]; then 
+	totalSize='Error! Data is unavailable.'
+else
+	totalSize=$(echo "$lshwOutput" | grep -A5 "\-memory" | grep -m1 'size:' | awk '{$1=""; print $0}')
+fi
+
 ramTable=$(paste -d ';' <(echo "$ramManufacturer") <(echo "$ramProductName") <(echo "$ramSerialNum") <(echo "$ramSize") <(echo "$ramSpeed") <(echo "$ramLocation") <(echo "$totalSize") | column -N Manufacturer,Model,'Seial Number',Size,Speed,Location,'Total size' -s ';' -o ' | ' -t)
 
 ####################### Storage Information ##############################
 
 driveManufacturer0=$(echo "$lshwOutput" | grep -A10 '\*\-disk' | grep 'vendor:' | awk '{$1=""; print $0}')
+if [ -z "$driveManufacturer0" ]; then 
+	driveManufacturer0='Error! Data is unavailable.'
+else
+	driveManufacturer0=$(echo "$lshwOutput" | grep -A10 '\*\-disk' | grep 'vendor:' | awk '{$1=""; print $0}')
+fi
+
 drivevendor1=$(echo "$lshwOutput" | grep -m1 -A8 "\-volume:0" | grep 'vendor:' | awk '{$1=""; print $0}')
+if [ -z "$drivevendor1" ]; then 
+	drivevendor1='Error! Data is unavailable.'
+else
+	drivevendor1=$(echo "$lshwOutput" | grep -m1 -A8 "\-volume:0" | grep 'vendor:' | awk '{$1=""; print $0}')
+fi
+
 drivevendor2=$(echo "$lshwOutput" | grep -m1 -A8 "\-volume:1" | grep 'vendor:' | awk '{$1=""; print $0}')
+if [ -z "$drivevendor1" ]; then 
+	drivevendor2='Error! Data is unavailable.'
+else
+	drivevendor2=$(echo "$lshwOutput" | grep -m1 -A8 "\-volume:1" | grep 'vendor:' | awk '{$1=""; print $0}')
+fi
+
 drivevendor3=$(echo "$lshwOutput" | grep -m1 -A8 "\-volume:2" | grep 'vendor:' | awk '{$1=""; print $0}')
+if [ -z "$drivevendor3" ]; then 
+	drivevendor3='Error! Data is unavailable.'
+else
+	drivevendor3=$(echo "$lshwOutput" | grep -m1 -A8 "\-volume:2" | grep 'vendor:' | awk '{$1=""; print $0}')
+fi
 
 driveModel=$(echo "$lshwOutput" | grep -m1 -A10 "\-disk" | grep 'product:' | awk '{$1=""; print $0}')
+if [ -z "$driveModel" ]; then 
+	driveModel='Error! Data is unavailable.'
+else
+	driveModel=$(echo "$lshwOutput" | grep -m1 -A10 "\-disk" | grep 'product:' | awk '{$1=""; print $0}')
+fi
 
 driveSize0=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==1 {print $4"B"}')
+if [ -z "$driveSize0" ]; then 
+	driveSize0='Error! Data is unavailable.'
+else
+	driveSize0=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==1 {print $4"B"}')
+fi
+
 driveSize1=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==2 {print $4"B"}')
+if [ -z "$driveSize1" ]; then 
+	driveSize1='Error! Data is unavailable.'
+else
+	driveSize1=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==2 {print $4"B"}')
+fi
+
 driveSize2=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==3 {print $4"B"}')
+if [ -z "$driveSize2" ]; then 
+	driveSize2='Error! Data is unavailable.'
+else
+	driveSize2=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==3 {print $4"B"}')
+fi
+
 driveSize3=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==4 {print $4"B"}')
+if [ -z "$driveSize3" ]; then 
+	driveSize3='Error! Data is unavailable.'
+else
+	driveSize3=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==4 {print $4"B"}')
+fi
 
 drivePartition0=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==1 {print $1}')
+if [ -z "$drivePartition0" ]; then 
+	drivePartition0='Error! Data is unavailable.'
+else
+	drivePartition0=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==1 {print $1}')
+fi
+
 drivePartition1=$(echo "$lsblkOutput" | grep "sda1" | awk 'FNR==1 {print $1}' | tail -c 5)
+if [ -z "$drivePartition1" ]; then 
+	drivePartition1='Error! Data is unavailable.'
+else
+	drivePartition1=$(echo "$lsblkOutput" | grep "sda1" | awk 'FNR==1 {print $1}' | tail -c 5)
+fi
+
 drivePartition2=$(echo "$lsblkOutput" | grep "sda2" | awk 'FNR==1 {print $1}' | tail -c 5)
+if [ -z "$drivePartition2" ]; then 
+	drivePartition2='Error! Data is unavailable.'
+else
+	drivePartition2=$(echo "$lsblkOutput" | grep "sda2" | awk 'FNR==1 {print $1}' | tail -c 5)
+fi
+
 drivePartition3=$(echo "$lsblkOutput" | grep "sda3" | awk 'FNR==1 {print $1}' | tail -c 5)
+if [ -z "$drivePartition3" ]; then 
+	drivePartition3='Error! Data is unavailable.'
+else
+	drivePartition3=$(echo "$lsblkOutput" | grep "sda3" | awk 'FNR==1 {print $1}' | tail -c 5)
+fi
 
 driveMountPoint0=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==1 {print $7}')
+if [ -z "$driveMountPoint0" ]; then 
+	driveMountPoint0='Error! Data is unavailable.'
+else
+	driveMountPoint0=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==1 {print $7}')
+fi
+
 driveMountPoint1=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==2 {print $7}')
+if [ -z "$driveMountPoint1" ]; then 
+	driveMountPoint1='Error! Data is unavailable.'
+else
+	driveMountPoint1=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==2 {print $7}')
+fi
+
 driveMountPoint2=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==3 {print $7}')
+if [ -z "$driveMountPoint2" ]; then 
+	driveMountPoint2='Error! Data is unavailable.'
+else
+	driveMountPoint2=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==3 {print $7}')
+fi
+
 driveMountPoint3=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==4 {print $7}')
+if [ -z "$driveMountPoint3" ]; then 
+	driveMountPoint3='Error! Data is unavailable.'
+else
+	driveMountPoint3=$(echo "$lsblkOutput" | grep "sda" | awk 'FNR==4 {print $7}')
+fi
 
 driveFilesystemSizeSDA2=$(echo "$lsblkOutput" | grep "sda2" | awk '{print $2"B"}')
+if [ -z "$driveFilesystemSizeSDA2" ]; then 
+	driveFilesystemSizeSDA2='Error! Data is unavailable.'
+else
+	driveFilesystemSizeSDA2=$(echo "$lsblkOutput" | grep "sda2" | awk '{print $2"B"}')
+fi
+
 driveFilesystemSizeSDA3=$(echo "$lsblkOutput" | grep "sda3" | awk '{print $2"B"}')
+if [ -z "$driveFilesystemSizeSDA3" ]; then 
+	driveFilesystemSizeSDA3='Error! Data is unavailable.'
+else
+	driveFilesystemSizeSDA3=$(echo "$lsblkOutput" | grep "sda3" | awk '{print $2"B"}')
+fi
 
 driveFilesystemFreeSDA2=$(echo "$lsblkOutput" | grep "sda2" | awk '{print $4"B"}')
-driveFilesystemFreeSDA3=$(echo "$lsblkOutput" | grep "sda3" | awk '{print $4"B"}')
+if [ -z "$driveFilesystemFreeSDA2" ]; then 
+	driveFilesystemFreeSDA2='Error! Data is unavailable.'
+else
+	driveFilesystemFreeSDA2=$(echo "$lsblkOutput" | grep "sda2" | awk '{print $4"B"}')
+fi
 
-diskTable=$(paste -d ';' <(echo "$drivePartition0" ; echo "$drivePartition1" ; echo "$drivePartition2" ; echo "$drivePartition3") <(echo "$driveManufacturer0" ; echo "$drivevendor1" ; echo "$drivevendor2" ; echo "$drivevendor3") <(echo "$driveModel" ; echo "N/A" ; echo "N/A" ; echo "N/A") <(echo "$driveSize0" ; echo "$driveSize1" ; echo "$driveSize2" ; echo "$driveSize3") <(echo "N/A" ; echo "N/A" ; echo "$driveFilesystemSizeSDA2" ; echo "$driveFilesystemSizeSDA3") <(echo "N/A" ; echo "N/A" ; echo "$driveFilesystemFreeSDA2" ; echo "$driveFilesystemFreeSDA3") <(echo "$driveMountPoint0" ; echo "$driveMountPoint1" ; echo "$driveMountPoint2" ; echo "$driveMountPoint3") | column -N 'Logical Name (/dev/sda)',Vendor,Model,Size,'Filesystem Size','Filesystem Free Space','Mount Point' -s ';' -o ' | ' -t) 
+driveFilesystemFreeSDA3=$(echo "$lsblkOutput" | grep "sda3" | awk '{print $4"B"}')
+if [ -z "$driveFilesystemFreeSDA3" ]; then 
+	driveFilesystemFreeSDA3='Error! Data is unavailable.'
+else
+	driveFilesystemFreeSDA3=$(echo "$lsblkOutput" | grep "sda3" | awk '{print $4"B"}')
+fi
+
+
+diskTable=$(paste -d ';' <(echo "$drivePartition0" ; echo "$drivePartition1" ; echo "$drivePartition2" ; echo "$drivePartition3") <(echo "$driveManufacturer0" ; echo "$drivevendor1" ; echo "$drivevendor2" ; echo "$drivevendor3") <(echo "$driveModel" ; echo "N/A" ; echo "N/A" ; echo "N/A") <(echo "$driveSize0" ; echo "$driveSize1" ; echo "$driveSize2" ; echo "$driveSize3") <(echo "N/A" ; echo "N/A" ; echo "$driveFilesystemSizeSDA2" ; echo "$driveFilesystemSizeSDA3") <(echo "N/A" ; echo "N/A" ; echo "$driveFilesystemFreeSDA2" ; echo "$driveFilesystemFreeSDA3") <(echo "$driveMountPoint0" ; echo "$driveMountPoint1" ; echo "$driveMountPoint2" ; echo "$driveMountPoint3") | column -N 'Partition Name (/dev/sda)',Vendor,Model,Size,'Filesystem Size','Filesystem Free Space','Mount Point' -s ';' -o ' | ' -t) 
+
+####################### Video Report ##############################
+
+videoManu=$(lshw -class display | grep "vendor:" | awk '{print $2}')
+if [ -z "$videoManu" ]; then 
+	videoManu='Error! Data is unavailable.'
+else
+	videoManu=$(lshw -class display | grep "vendor:" | awk '{print $2}')
+fi
+
+videoDescription=$(lshw -class display | grep "description:" | awk '{print $2}')
+if [ -z "$videoDescription" ]; then 
+	videoDescription='Error! Data is unavailable.'
+else
+	videoDescription=$(lshw -class display | grep "description:" | awk '{print $2}')
+fi
+
+
 cat <<EOF
 
 ----------------------------Report Content------------------------------
