@@ -71,7 +71,7 @@ function cpuReport {
 		sizeL3=$(echo "$lscpuOutput" | grep 'L3 ' | awk '{print $3}')
 	fi
 	
-cat <<-EOF
+cat <<EOF
 	
 ------ CPU INFORMATION------
 CPU manufacturer and model=$cpumanufac
@@ -139,6 +139,8 @@ function networkReport() {
 	interfaceTable=$(paste -d ';' <(echo "$interfaceDescription") <(echo "$interfaceManu") <(echo "$interSpeed") <(echo "$interIpAdd") <(echo "$interBridgeMaster") <(echo "$DNSserver") <(echo "$searchDomain") | column -N 'Interface description',Manufacturer,'Interface Speed','Ip Address','Bridge Master','DNS Server','Search Domain' -s ';' -o ' | ' -t)
  	
 cat <<-EOF
+
+========================================================================================================
 -NETWORK INFORMATION-
 $interfaceTable
 EOF
@@ -299,6 +301,8 @@ function storageReport() {
 	diskTable=$(paste -d ';' <(echo "$drivePartition0" ; echo "$drivePartition1" ; echo "$drivePartition2" ; echo "$drivePartition3") <(echo "$driveManufacturer0" ; echo "$drivevendor1" ; echo "$drivevendor2" ; echo "$drivevendor3") <(echo "$driveModel" ; echo "N/A" ; echo "N/A" ; echo "N/A") <(echo "$driveSize0" ; echo "$driveSize1" ; echo "$driveSize2" ; echo "$driveSize3") <(echo "N/A" ; echo "N/A" ; echo "$driveFilesystemSizeSDA2" ; echo "$driveFilesystemSizeSDA3") <(echo "N/A" ; echo "N/A" ; echo "$driveFilesystemFreeSDA2" ; echo "$driveFilesystemFreeSDA3") <(echo "$driveMountPoint0" ; echo "$driveMountPoint1" ; echo "$driveMountPoint2" ; echo "$driveMountPoint3") | column -N 'Partition Name (/dev/sda)',Vendor,Model,Size,'Filesystem Size','Filesystem Free Space','Mount Point' -s ';' -o ' | ' -t) 
 	
 cat <<EOF
+
+========================================================================================================
 -DISK INFORMATION-
 
 $diskTable
@@ -360,6 +364,8 @@ function ramReport() {
 	ramTable=$(paste -d ';' <(echo "$ramManufacturer") <(echo "$ramProductName") <(echo "$ramSerialNum") <(echo "$ramSize") <(echo "$ramSpeed") <(echo "$ramLocation") <(echo "$totalSize") | column -N Manufacturer,Model,'Seial Number',Size,Speed,Location,'Total size' -s ';' -o ' | ' -t)	
 
 cat <<EOF
+
+========================================================================================================
 -RAM INFORMATION-
 $ramTable
 EOF
@@ -384,6 +390,8 @@ function videoReport() {
 	fi
 	
 cat <<EOF
+
+========================================================================================================
 -VIDEO INFORMATION-
 Manufacturer=$videoManu
 Description=$videoDescription
@@ -421,6 +429,8 @@ function cmpReport() {
 	fi
 
 cat <<EOF
+
+========================================================================================================
 -SYSTEM DESCRIPTION-
 
 Computer manufacturer=         $cmpmanuftr
@@ -444,7 +454,8 @@ function osReport() {
 	#Heading and command for The operating system name and version
 	Host_Information=$(hostnamectl | awk 'FNR == 7 {print $3, $4, $5}')
 cat <<EOF
--OS INFORMATION-
+
+========================================================================================================
 -OS INFOPRMATION-
 
 Linux distro=                  $Host_Information
