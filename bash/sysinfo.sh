@@ -32,7 +32,7 @@ log_errors
 
 ############################# error message with a timestamp #######################################
 
-
+#
 verbose=false
 systemReport=false
 diskReport=false
@@ -67,11 +67,12 @@ while [ $# -gt 0 ]; do
 	esac
 	shift
 done
+#-v runs your script verbosely, showing any errors to the user instead of sending them to the logfile
 if [[ "$verbose" == true ]]; then
 	fullReport=false
 	errormessage
 fi
-
+#system runs only the computerreport, osreport, cpureport, ramreport, and videoreport
 if [[ "$systemReport" == true ]]; then 
 	fullReport=false
 	cpureport
@@ -80,17 +81,21 @@ if [[ "$systemReport" == true ]]; then
 	computerreport
 	osreport
 fi
-	
+
+#disk runs only the diskreport	
 if [[ "$diskReport" == true ]]; then
 	fullReport=false
 	diskreport
 fi
 
+#network runs only the networkreport
 if [[ "$networkReport" == true ]]; then
 	fullReport=false
 	networkreport
 	
 fi
+
+#Print the full report
 if [[ "$fullReport" == true ]]; then
 	fullReport=false
 	diskreport
