@@ -114,6 +114,14 @@ if ! shopt -oq posix; then
     . /usr/share/bash-completion/bash_completion
   elif [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
+    
+ 
   fi
 fi
 PATH=$PATH:~/COMP2101/bash
+if [ -d ~/COMP2101/bash ];
+then PATH=$PATH:~/COMP2101/bash
+cd COMP2101/bash || exit
+./welcome-message.sh
+fi
+
